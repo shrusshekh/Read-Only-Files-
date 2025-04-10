@@ -1,0 +1,21 @@
+const makeFileReadyOnly = () => {
+  const fileUrl = 'https://docs.google.com/document/d/1bXJOHp9HJdvBCrDr6xRyuUCM9cH5PIMnqE57YFJnx6Y/edit?usp=sharing';
+  const [fileId] = fileUrl.split('/').filter((e) => /[_-\w]{25,}/.test(e));
+  UrlFetchApp.fetch(`https://www.googleapis.com/drive/v3/files/${fileId}`, {
+    method: 'PATCH',
+    contentType: 'application/json',
+    headers: {
+      Authorization: `Bearer ${ScriptApp.getOAuthToken()}`,
+    },
+    payload: JSON.stringify({
+      contentRestrictions: [
+        {
+          readOnly: true,
+          reason: 'Prevent accidental editing',
+        },
+      ],
+    }),
+  });
+  // For requesting correct scope, do not delete
+  // var file = DriveApp.getFileById().setName()
+};
